@@ -1,3 +1,4 @@
 .env
 venv
 app/strava_tokens.json
+todo.txt

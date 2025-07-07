@@ -2,7 +2,7 @@
 VENV_NAME = venv
 
 # Define the name of the Docker image
-DOCKER_IMAGE = myproject_image
+DOCKER_IMAGE = strava_service
 
 # Create and activate virtual environment, and install requirements
 .PHONY: venv
@@ -18,17 +18,16 @@ build-docker:
 	# Build the Docker image using the Dockerfile
 	docker build -t $(DOCKER_IMAGE) .
 
+#Run Docker image
+.PHONY: run-docker
+run-docker:
+	docker run -v "/Users/elorenzi/repos/stravatools/app/strava_tokens.json:/app/strava_tokens.json" $(DOCKER_IMAGE)
+
 # Install requirements inside the virtual environment
 .PHONY: install
 install:
 	# Install dependencies inside the virtual environment
 	$(VENV_NAME)/bin/pip install -r requirements-dev.txt
-
-# Run application with Docker
-.PHONY: run-docker
-run-docker:
-	# Run the Docker container with the specified image
-	docker run -p 8000:8000 $(DOCKER_IMAGE)
 
 # Clean up: remove virtual environment
 .PHONY: clean-venv
