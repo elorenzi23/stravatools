@@ -27,20 +27,26 @@ class StravaClient:
         else:
             print("No activities found.")
 
-    def get_activity_streams(self, activity_id: int, access_token: str = None, resolution: str = "high", stream_types: list = None):
+    def get_activity_streams(
+        self,
+        activity_id: int,
+        access_token: str = None,
+        resolution: str = "high",
+        stream_types: list = None,
+    ):
         """
         Get activity streams from Strava API
-    
+
         Args:
             activity_id (int): The ID of the activity
             access_token (str, optional): Override access token if needed
             resolution (str): "low", "medium", "high", or "all"
             stream_types (list, optional): List of stream types to request
-    
+
         Returns:
             dict: Stream data organized by stream type, or None if error
         """
-    
+
         # Default stream types if none specified
         if stream_types is None:
             stream_types = [
@@ -51,49 +57,59 @@ class StravaClient:
                 "heartrate",
                 "cadence",
                 "watts",
-                "latlng"
-            ] 
-    
+                "latlng",
+            ]
+
         # Use provided access token or fall back to instance token
         if access_token:
             headers = {
                 "Authorization": f"Bearer {access_token}",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             }
         else:
             headers = self.headers
-    
+
         params = {
             "keys": ",".join(stream_types),
             "key_by_type": "true",
-            "resolution": resolution
+            "resolution": resolution,
         }
-    
+
         streams_url = f"{self.BASE_URL}/activities/{activity_id}/streams"
-    
+
         try:
-            streams_response = requests.get(streams_url, headers=headers, params=params)
-        
+            streams_response = requests.get(
+                streams_url, headers=headers, params=params
+            )
+
             if streams_response.status_code == 200:
                 streams_data = streams_response.json()
-                print(f"Successfully retrieved {len(streams_data)} stream types for activity {activity_id}")
+                print(
+                    f"Successfully retrieved {len(streams_data)} stream types for activity {activity_id}"
+                )
                 return streams_data
             elif streams_response.status_code == 401:
-                print(f"Authentication failed: Invalid or expired access token")
+                print("Authentication failed: Invalid or expired access token")
                 return None
             elif streams_response.status_code == 403:
-                print(f"Access forbidden: You may not have permission to view this activity")
+                print(
+                    "Access forbidden: You may not have permission to view this activity"
+                )
                 return None
             elif streams_response.status_code == 404:
                 print(f"Activity {activity_id} not found")
                 return None
             elif streams_response.status_code == 429:
-                print(f"Rate limit exceeded. Please wait before making more requests")
+                print(
+                    "Rate limit exceeded. Please wait before making more requests"
+                )
                 return None
             else:
-                print(f"Failed to retrieve streams: {streams_response.status_code} - {streams_response.text}")
+                print(
+                    f"Failed to retrieve streams: {streams_response.status_code} - {streams_response.text}"
+                )
                 return None
-            
+
         except requests.exceptions.RequestException as e:
             print(f"Request failed: {e}")
             return None
