@@ -18,10 +18,13 @@ build-docker:
 	# Build the Docker image using the Dockerfile
 	docker build -t $(DOCKER_IMAGE) .
 
-#Run Docker image
 .PHONY: run-docker
 run-docker:
-	docker run -v "/Users/elorenzi/repos/stravatools/app/strava_tokens.json:/app/strava_tokens.json" $(DOCKER_IMAGE)
+	docker run \
+		-p 8000:8000 \
+		-v "/Users/elorenzi/repos/stravatools/app/strava_tokens.json:/app/strava_tokens.json" \
+		$(DOCKER_IMAGE)
+
 
 # Install requirements inside the virtual environment
 .PHONY: install
