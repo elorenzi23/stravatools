@@ -85,7 +85,8 @@ class StravaClient:
             if streams_response.status_code == 200:
                 streams_data = streams_response.json()
                 print(
-                    f"Successfully retrieved {len(streams_data)} stream types for activity {activity_id}"
+                    f"Successfully retrieved {len(streams_data)}"
+                    f" stream types for activity {activity_id}"
                 )
                 return streams_data
             elif streams_response.status_code == 401:
@@ -93,7 +94,8 @@ class StravaClient:
                 return None
             elif streams_response.status_code == 403:
                 print(
-                    "Access forbidden: You may not have permission to view this activity"
+                    "Access forbidden: You may not have "
+                    "permission to view this activity"
                 )
                 return None
             elif streams_response.status_code == 404:
@@ -101,12 +103,14 @@ class StravaClient:
                 return None
             elif streams_response.status_code == 429:
                 print(
-                    "Rate limit exceeded. Please wait before making more requests"
+                    "Rate limit exceeded. "
+                    "Please wait before making more requests"
                 )
                 return None
             else:
                 print(
-                    f"Failed to retrieve streams: {streams_response.status_code} - {streams_response.text}"
+                    f"Failed to retrieve streams: "
+                    f"{streams_response.status_code} - {streams_response.text}"
                 )
                 return None
 
